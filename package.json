@@ -18,7 +18,7 @@
     "measurement"
   ],
   "author": "MW",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "SEE LICENSE IN \\StarData\\LICENSE",
   "dependencies": {
     "ejs": "^3.1.10",
     "express": "^5.1.0"
