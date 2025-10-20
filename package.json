@@ -1,0 +1,22 @@
+{
+  "name": "stardata",
+  "version": "1.0.0",
+  "description": "Website that uses apparent and accessible data from pictures of stars to estimate the distance to said star.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "\"C:\\Users\\Dante Morgan Wilson\\Documents\\GitHub\\StarData\""
+  },
+  "keywords": [
+    "star",
+    "astronomy",
+    "data",
+    "measurement"
+  ],
+  "author": "MW",
+  "license": "SEE LICENSE IN LICENSE"
+}
