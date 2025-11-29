@@ -1,0 +1,9 @@
+#licenseTXT-wrapper{
+  width: 100vw;
+  text-align: center;
+}
+/* #licenseTXT{
+} */
+.licenseSubtitle{
+  text-transform: uppercase;
+}

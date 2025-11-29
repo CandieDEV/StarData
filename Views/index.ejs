@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/index.css">
+  <title>StarData</title>
+</head>
+<body>
+  <%- include('templates/header') %>
+  <main>
+    <form action="/result" method="post">
+      <h2 id="instructionTitle">Ladda upp en bild av stjärnan</h2>
+      <div id="canvas-container">
+        <canvas id="imgDisplay" width="7800" height="7800"></canvas>
+        <canvas id="rectangleDisplay" width="300" height="300"></canvas>
+        <canvas id="outputDisplay" class="toggle" width="300" height="300"></canvas>
+        
+        <div class="button-container toggle" id="userEditBtn-container">
+          <label for="cutIMG" id="cutIMGLabel" class="btnLabel"><span class="pseudoBTN">Skär till markering</span></label>
+          <input type="button" name="cutIMG" id="cutIMG" class="hidden" value="Skär till markering">
+          
+          <label for="undoIMG" id="undoIMGLabel" class="btnLabel"><span class="pseudoBTN">Undo</span></label>
+          <input type="button" name="undoIMG" id="undoIMG" class="hidden" value="Undo">
+        </div>
+      </div>
+      <div class="button-container">
+        <label for="starInput" id="starInputLabel" class="btnLabel"><span class="pseudoBTN">Ladda upp stjärnan</span><span id="fileName"></span></label>
+        <input type="file" name="starIMG" id="starInput" class="hidden" accept="image/*">
+        <label for="processIMG" id="processIMGLabel" class="btnLabel toggle"><span class="pseudoBTN">Räkna avstånd</span></label>
+        <input type="button" name="processIMG" id="processIMG" class="hidden" value="Räkna avstånd">
+      </div>
+    </form>
+  </main>
+  <%- include('templates/footer') %>
+
+<script src="https://cdn.jsdelivr.net/npm/exifreader@4.12.0/dist/exif-reader.min.js"></script>
+<script src="/script/image_pre-processing.js"></script>
+<script src="/script/image_full-processing.js"></script>
+<script src="/script/site_functionality.js"></script>
+</body>
+</html>

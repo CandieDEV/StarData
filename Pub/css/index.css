@@ -1,0 +1,82 @@
+form{
+  display: flex; 
+  position: relative;
+  height: 350px;
+  flex-direction: column;
+  gap: .5rem;
+  padding: 1rem;
+}
+
+#canvas-container{
+  position: relative;
+  width: 35vw;
+}
+
+/*
+Source - https://stackoverflow.com/a
+Posted by Basj, but edited for the purpose of this code
+Retrieved 2025-11-10, License - CC BY-SA 4.0
+///////////////////////////////////////////////*/
+canvas { position: absolute; left: 0; top: 0; }
+#imgDisplay { z-index: 0; }
+#rectangleDisplay { display: none; z-index: 1; }
+/*/////////////////////////////////////////////*/
+#outputDisplay{z-index: 3;}
+canvas{
+  height: 300px;
+  width: 300px;
+}
+#imgDisplay{
+  border: 1px solid;
+}
+.button-container{
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  bottom:0;
+  gap: 1vw;
+}
+
+.hidden{
+  display: none;
+}
+.btnLabel{
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+  height: 4vh;
+}
+#fileName{
+  position: absolute;
+  bottom: -4vh;
+}
+.pseudoBTN{
+  color: black;
+  width: fit-content;
+  height: 4vh;
+  border: 1px solid black;
+  padding: 0.08em 0.3em;
+  border-radius: 0.2em;
+  background-color: white;
+}
+.pseudoBTN:hover{
+  background-color: rgb(238, 238, 238);
+  cursor: pointer;
+}
+.pseudoBTN:active{
+  background-color: rgb(215, 213, 213);
+  cursor:wait;
+}
+
+#userEditBtn-container{
+  display: flex;
+  flex-direction: column;
+  right: 0;
+  gap: 5vh;
+  bottom: -33vh;
+}
+
+.toggle{
+  display: none !important; 
+}

@@ -1,0 +1,27 @@
+html, body{
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  background-color: rgb(48, 72, 100);
+  overflow: hidden;
+}
+main{
+  flex: 1;
+}
+p, h1, h2, h3, h4, h5, h6, pre, span, li, dt, dd, label, input{
+  color: white;
+}
+#instructionTitle{
+  font-size: 1.3em;
+  margin: 0;
+}
+a{
+  color: rgb(215, 145, 250);
+}
+a:hover{
+  color: rgb(195, 125, 210)
+}
+a:active{
+  color: rgb(175, 105, 170)
+}
