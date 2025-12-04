@@ -20,6 +20,7 @@
   "author": "MW",
   "license": "SEE LICENSE IN \\StarData\\LICENSE",
   "dependencies": {
+    "colorthief": "^2.6.0",
     "dotenv": "^17.2.3",
     "ejs": "^3.1.10",
     "express": "^5.1.0",

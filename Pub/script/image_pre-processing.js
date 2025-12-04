@@ -45,6 +45,7 @@ function previewImage(input) {
 async function readExposureMetadata(file) {
     const arrayBuffer = await file.arrayBuffer();
     const tags = ExifReader.load(arrayBuffer);
+    console.log(tags)
 
     return {
         exposureTime: tags["ExposureTime"]?.value ?? null,
@@ -71,7 +72,7 @@ const rect = {
 // Allows a rectangle to be drawn for selection
 ctxRect.setLineDash([1, 0]);
 let origin = null;
-rectangleDisplay.onmousedown = e => { origin = {x: e.offsetX, y: e.offsetY}; console.log(image.width, image.height)};
+rectangleDisplay.onmousedown = e => { origin = {x: e.offsetX, y: e.offsetY};};
 window.onmouseup = e => { origin = null; };
 rectangleDisplay.onmousemove = e => { 
   if (!!origin) { 
@@ -80,7 +81,6 @@ rectangleDisplay.onmousemove = e => {
     ctxRect.beginPath();
     rect.x = origin.x
     rect.y = origin.y
-    // console.log(e.offsetX, e.offsetY)
     rect.width = e.offsetX - origin.x
     rect.height = e.offsetY - origin.y
     ctxRect.rect(rect.x, rect.y, rect.width, rect.height); 
@@ -125,66 +125,65 @@ function getPosOfCutIMG(starDisplay, image, rect){
 }
 
 // Function to cut the image down to selection
-async function cutImg(e){
+function cutImg(e){
   e.preventDefault();
-  const saveStateData = await starDisplay.toDataURL()
+  const saveStateData = starDisplay.toDataURL()
   saveState.push(saveStateData)
 
   if (rect.width === null || rect.height === null) return;
-  await ctxStar.clearRect(0, 0, starDisplay.width, starDisplay.height);
+  ctxStar.clearRect(0, 0, starDisplay.width, starDisplay.height);
 
   const {srcX, srcY, srcW, srcH, destX, destY, destW, destH} = getPosOfCutIMG(starDisplay, image, rect);
 
-  await ctxStar.clearRect(0, 0, starDisplay.width, starDisplay.height);
-  await ctxStar.save();
+  ctxStar.clearRect(0, 0, starDisplay.width, starDisplay.height);
+  ctxStar.save();
   ctxStar.fillStyle = "#ffffff00"; 
-  await ctxStar.fillRect(0, 0, starDisplay.width, starDisplay.height);
-  await ctxStar.drawImage(image, srcX, srcY, srcW, srcH, destX, destY, destW, destH);
-  await ctxStar.restore();
+  ctxStar.fillRect(0, 0, starDisplay.width, starDisplay.height);
+  ctxStar.drawImage(image, srcX, srcY, srcW, srcH, destX, destY, destW, destH);
+  ctxStar.restore();
   
-  const setImgData = await starDisplay.toDataURL();
+  const setImgData = starDisplay.toDataURL();
   image.src = setImgData;
 
-  await ctxRect.clearRect(0, 0, rectangleDisplay.width, rectangleDisplay.height);
+  ctxRect.clearRect(0, 0, rectangleDisplay.width, rectangleDisplay.height);
   rect.x = rect.y = rect.width = rect.height = null;
   displayFinalInstructions();
 }
 
 const cutImgBtn = document.getElementById('cutIMG');
-cutImgBtn.addEventListener("click", async (e) => {await cutImg(e)});
+cutImgBtn.addEventListener("click", (e) => {cutImg(e)});
 
-window.addEventListener('keyup', async (e) => {
+window.addEventListener('keyup', (e) => {
   const evtobj = window.e ? window.e : e;
   if (evtobj.key === 'Enter') {
-    console.log(image)
-      await cutImg(e);
+    cutImg(e);
   }
 });
 
 //Function to allow an undo 
-async function undoAction(){
+function undoAction(){
  if(typeof saveState[0] == 'undefined') return;
   const lastState = saveState.pop() 
 
   lastIMG.onload = async function(){
-    await ctxStar.clearRect(0, 0, starDisplay.width, starDisplay.height);
-    await ctxStar.save();
-    await ctxStar.drawImage(lastIMG, 0, 0, starDisplay.width, starDisplay.height);
-    await ctxStar.restore(); 
+    ctxStar.clearRect(0, 0, starDisplay.width, starDisplay.height);
+    ctxStar.save();
+    ctxStar.drawImage(lastIMG, 0, 0, starDisplay.width, starDisplay.height);
+    ctxStar.restore(); 
     image.src = lastState
   }
   lastIMG.src = lastState;
 
-  await ctxRect.clearRect(0, 0, rectangleDisplay.width, rectangleDisplay.height);
+  ctxRect.clearRect(0, 0, rectangleDisplay.width, rectangleDisplay.height);
   rect.x = rect.y = rect.width = rect.height = null;
 }
 
 const undoIMGbtn = document.getElementById('undoIMG');
-undoIMGbtn.addEventListener("click", async (e) => { await undoAction() });
+undoIMGbtn.addEventListener("click", (e) => { undoAction() });
 
-window.addEventListener('keydown', async (e) => {
+window.addEventListener('keydown', (e) => {
   const evtobj = window.e ? window.e : e;
   if (evtobj.ctrlKey && evtobj.keyCode == 90) {
-      await undoAction();
+      undoAction();
   }
 });
