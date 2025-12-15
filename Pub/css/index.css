@@ -12,16 +12,11 @@ form{
   width: 35vw;
 }
 
-/*
-Source - https://stackoverflow.com/a
-Posted by Basj, but edited for the purpose of this code
-Retrieved 2025-11-10, License - CC BY-SA 4.0
-///////////////////////////////////////////////*/
 canvas { position: absolute; left: 0; top: 0; }
 #imgDisplay { z-index: 0; }
 #rectangleDisplay { display: none; z-index: 1; }
-/*/////////////////////////////////////////////*/
-#outputDisplay{z-index: 3;}
+#outputDisplay{ z-index: 3; }
+
 canvas{
   height: 300px;
   width: 300px;

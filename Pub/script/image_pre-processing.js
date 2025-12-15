@@ -64,11 +64,6 @@ const rect = {
   height: null
 }
 
-// Source - https://stackoverflow.com/a
-// Posted by Basj, but edited for the purpose of this code
-// Retrieved 2025-11-10, License - CC BY-SA 4.0
-/////////////////////////////////////////////////////////////////////////////////////////
-
 // Allows a rectangle to be drawn for selection
 ctxRect.setLineDash([1, 0]);
 let origin = null;
@@ -87,8 +82,6 @@ rectangleDisplay.onmousemove = e => {
     ctxRect.stroke(); 
   } 
 }
-/////////////////////////////////////////////////////////////////////////////////////////
-
 
 const saveState = [] //To store each saved state
 

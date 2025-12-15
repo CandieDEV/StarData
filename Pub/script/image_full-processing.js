@@ -116,25 +116,8 @@ function measureStarFlux() {
     return flux;
 }
 
-// Helper function to estimate the apparent magnitude using flux and metadata
-function fluxToMagnitude(flux, meta) {
-    // let exposureSeconds = (() => {
-    // if (!meta || !meta.exposureTime) return 1; // default 1s
-    //   const [num, den] = meta.exposureTime;
-    //   return Number(num) / Number(den);
-    // })();
-    // const gain = meta.iso ? meta.iso / 100 : 1; 
-    // const telescopeDiameter = 0.1;
-    // const telescopeArea = Math.PI * (telescopeDiameter/2)**2;
-    // const QuantomEfficiency = 0.6; 
-    // const Flux0 = 3.63e-20;
-    // const Ne = flux * gain;
-    // const NePerSec = Ne / exposureSeconds;
-    // const Nphotons = NePerSec / QuantomEfficiency;
-    // const fluxPerUnitArea = Nphotons / telescopeArea;
-
-    // const m = -2.5 * Math.log10(fluxPerUnitArea / Flux0);
-
+// Helper function to estimate the apparent magnitude using flux
+function fluxToMagnitude(flux) {
     return -2.5*Math.log10(flux);
 }
 
@@ -145,10 +128,7 @@ processIMG.addEventListener('click', (e) => {
   isolationMethod();
 
   const starInfo = ctxStar.getImageData(0, 0, starDisplay.width, starDisplay.height, {willReadFrequently:true});
-//   const starData = starInfo.data;
-//   const starDataAlphaRemoved = alphaRemoved
   ctxStar.putImageData(starInfo, 0, 0)
-  //grabs the dominant color of the star
   const flux = measureStarFlux();
   const colorThief = new ColorThief();
   const dominantColor = colorThief.getColor(starDisplay);
