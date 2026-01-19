@@ -180,3 +180,15 @@ window.addEventListener('keydown', (e) => {
       undoAction();
   }
 });
+
+window.addEventListener('keydown', (e) => {
+  const evtobj = window.e ? window.e : e;
+  if (evtobj.ctrlKey && evtobj.keyCode == 83) {
+    const dataURL = starDisplay.toDataURL("image/jpeg", 1.0);
+    const a = document.createElement('a');
+    a.href = dataURL;
+    a.download = 'Star';
+    // document.body.appendChild(a);
+    a.click();
+  }
+});
