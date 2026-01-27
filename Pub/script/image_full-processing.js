@@ -1,7 +1,7 @@
 const processIMG = document.getElementById('processIMG');
 const outputDisplay = document.getElementById('outputDisplay');
 
-// Function to try and automatically calculate the best temps for star isolation
+// Helper function to try and automatically calculate the best temps for star isolation
 function computeBackgroundParameters(meta) {
   if (!meta) {
     console.warn('No meta-data found')
@@ -62,7 +62,7 @@ for (let i = 0; i < data.length; i += 4) {
   const g = data[i + 1];
   const b = data[i + 2];
 
-  const brightness = (r + g + b) / 3;
+  const brightness = (r + g + b) / 3; //estimates the percieved brightness 
 
     if (brightness < threshold) {
       data[i + 3] = 0; 
@@ -116,8 +116,12 @@ function measureStarFlux() {
 }
 
 // Helper function to estimate the apparent magnitude using flux
-const fluxToMagnitude = (flux) => { return -2.5*Math.log10(flux); }
+const fluxTomagnitude = (flux) => { 
+  const constant = -0.07714520803; //constant is calculated by measuring the flux of known stars and comparing the result to the expected value.
+  return -2.5 * Math.log10(flux) * constant; //uses the correlation between flux and apparent magnitude, multiplied by a constant to account for errors.
+}
 
+// A table of known correlations between a stars temperature and their color
 const colorTable = [
   { temp: 2300, color: "#ff6813" },
   { temp: 2400, color: "#ff6e17" },
@@ -226,7 +230,8 @@ function colorToTemp(color, step = 0.001){
   return bestTemp;
 };  
 
-const absoluteMTable = [
+// A table of known correlations between temperature and absolute magnitude in dwarf stars
+const absoluteMTableDwarf = [
   { temp: 44900, M: -5.80 },
   { temp: 42900, M: -5.50 },
   { temp: 41400, M: -5.35 },
@@ -321,7 +326,116 @@ const absoluteMTable = [
   { temp: 1870, M: 22.30 }
 ];
 
-function tempToMagnitude(temp){
+// A table of known correlations between temperature and absolute magnitude in main sequence stars
+const absoluteMTableMain = [
+  { temp: 54000, M: -10.0 },
+  { temp: 45000, M: -8.8 },
+  { temp: 43300, M: -8.6 },
+  { temp: 40600, M: -8.2 },
+  { temp: 37800, M: -7.7 },
+  { temp: 29200, M: -6.0 },
+  { temp: 23000, M: -4.4 },
+  { temp: 21000, M: -3.8 },
+  { temp: 17600, M: -2.6 },
+  { temp: 15200, M: -1.6 },
+  { temp: 14300, M: -1.2 },
+  { temp: 13500, M: -0.84 },
+  { temp: 12300, M: -0.23 },
+  { temp: 11400, M: 0.29 },
+  { temp: 9600,  M: 1.4 },
+  { temp: 9330,  M: 1.6 },
+  { temp: 9040,  M: 1.8 },
+  { temp: 8750,  M: 2.1 },
+  { temp: 8480,  M: 2.3 },
+  { temp: 8310,  M: 2.4 },
+  { temp: 7920,  M: 2.7 },
+  { temp: 7350,  M: 3.2 },
+  { temp: 7050,  M: 3.5 },
+  { temp: 6850,  M: 3.7 },
+  { temp: 6700,  M: 3.8 },
+  { temp: 6550,  M: 4.0 },
+  { temp: 6400,  M: 4.1 },
+  { temp: 6300,  M: 4.2 },
+  { temp: 6050,  M: 4.5 },
+  { temp: 5930,  M: 4.6 },
+  { temp: 5800,  M: 4.8 },
+  { temp: 5660,  M: 4.9 },
+  { temp: 5440,  M: 5.2 },
+  { temp: 5240,  M: 5.4 },
+  { temp: 5110,  M: 5.6 },
+  { temp: 4960,  M: 5.8 },
+  { temp: 4800,  M: 6.0 },
+  { temp: 4600,  M: 6.3 },
+  { temp: 4400,  M: 6.6 },
+  { temp: 4000,  M: 7.3 },
+  { temp: 3750,  M: 7.7 },
+  { temp: 3700,  M: 7.8 },
+  { temp: 3600,  M: 7.9 },
+  { temp: 3500,  M: 8.1 },
+  { temp: 3400,  M: 8.3 },
+  { temp: 3200,  M: 8.7 },
+  { temp: 3100,  M: 8.9 },
+  { temp: 2900,  M: 9.4 },
+  { temp: 2700,  M: 9.9 }
+];
+
+// A table of known correlations between temperature and absolute magnitude in giant stars
+const absoluteMTableGiant = [
+  { temp: 5010, M: 0.7 },
+  { temp: 4870, M: 0.6 },
+  { temp: 4720, M: 0.5 },
+  { temp: 4580, M: 0.4 },
+  { temp: 4460, M: 0.2 },
+  { temp: 4210, M: 0.1 },
+  { temp: 4010, M: 0.0 },
+  { temp: 3780, M: -0.2 },
+  { temp: 3660, M: -0.4 },
+  { temp: 3600, M: -0.5 },
+  { temp: 3500, M: -0.6 },
+  { temp: 3300, M: -0.7 },
+  { temp: 3100, M: -0.75 },
+  { temp: 2950, M: -0.8 },
+  { temp: 2800, M: -0.9 }
+];
+
+// A table of known correlations between temperature and absolute magnitude in super giant stars
+const absoluteMTableSuperGiants = [
+  { temp: 21000, M: -6.4 },
+  { temp: 16000, M: -6.4 },
+  { temp: 14000, M: -6.4 },
+  { temp: 12800, M: -6.3 },
+  { temp: 11500, M: -6.3 },
+  { temp: 11000, M: -6.3 },
+  { temp: 10500, M: -6.3 },
+  { temp: 10000, M: -6.2 },
+  { temp: 9700,  M: -6.2 },
+  { temp: 9400,  M: -6.2 },
+  { temp: 9100,  M: -6.2 },
+  { temp: 8900,  M: -6.2 },
+  { temp: 8300,  M: -6.1 },
+  { temp: 7500,  M: -6.0 },
+  { temp: 7200,  M: -6.0 },
+  { temp: 6800,  M: -5.9 },
+  { temp: 6150,  M: -5.9 },
+  { temp: 5800,  M: -5.9 },
+  { temp: 5500,  M: -5.8 },
+  { temp: 5100,  M: -5.8 },
+  { temp: 5050,  M: -5.7 },
+  { temp: 4900,  M: -5.7 },
+  { temp: 4700,  M: -5.6 },
+  { temp: 4500,  M: -5.6 },
+  { temp: 4300,  M: -5.6 },
+  { temp: 4100,  M: -5.5 },
+  { temp: 3750,  M: -5.5 },
+  { temp: 3660,  M: -5.3 },
+  { temp: 3600,  M: -5.3 },
+  { temp: 3500,  M: -5.3 },
+  { temp: 3300,  M: -5.3 },
+  { temp: 3100,  M: -5.2 },
+  { temp: 2950,  M: -5.2 }
+];
+
+function tempToMagnitude(temp, absoluteMTable){
   if (temp >= absoluteMTable[0].temp) return absoluteMTable[0].M;
   if (temp <= absoluteMTable[absoluteMTable.length - 1].temp) return absoluteMTable[absoluteMTable.length - 1].M;
 
@@ -344,6 +458,7 @@ function tempToMagnitude(temp){
   return null;
 };  
 
+// Helper to turn rgb to hex
 const rgbToHex = (r, g, b) => '#' + [r, g, b].map(x => {
   const hex = x.toString(16)
   return hex.length === 1 ? '0' + hex : hex
@@ -366,11 +481,54 @@ processIMG.addEventListener('click', (e) => {
 
   console.log(`Dominant color: ${dominantHexColor}`);
 
-  const magnitude = fluxToMagnitude(flux, window._imgMeta) * -0.07714520803;
-  const temperature = colorToTemp(dominantHexColor) + 1000
-  const Magnitude = tempToMagnitude(temperature)
-  console.log(magnitude, temperature, magnitudeToDistance(magnitude, Magnitude))
-});
+  const magnitude = fluxTomagnitude(flux, window._imgMeta);
+  const temperature = colorToTemp(dominantHexColor) + 1000;
+  const infoDwarf = calcInfo(temperature, magnitude, absoluteMTableDwarf)
+  const infoMain = calcInfo(temperature, magnitude, absoluteMTableMain)
+  const infoGiant = calcInfo(temperature, magnitude, absoluteMTableGiant)
+  const infoSuper = calcInfo(temperature, magnitude, absoluteMTableSuperGiants)
+
+  console.log(absoluteMTableDwarf[0].temp)
+
+  const data = {
+    dwarf: {
+      w: (temperature <= absoluteMTableDwarf[0].temp && temperature >= absoluteMTableDwarf[absoluteMTableDwarf.length - 1].temp)? true : false,
+      m: magnitude,
+      M: infoDwarf[0],
+      t: temperature,
+      d: infoDwarf[1]
+    },
+    main:{
+      w: (temperature <= absoluteMTableMain[0].temp && temperature >= absoluteMTableMain[absoluteMTableMain.length - 1].temp)? true : false,
+      m: magnitude,
+      M: infoMain[0],
+      t: temperature,
+      d: infoMain[1]
+    },
+    giant: {
+      w: (temperature <= absoluteMTableGiant[0].temp && temperature >= absoluteMTableGiant[absoluteMTableGiant.length - 1].temp)? true : false,
+      m: magnitude,
+      M: infoGiant[0],
+      t: temperature,
+      d: infoGiant[1]
+    },
+    superG: {
+      w: (temperature <= absoluteMTableSuperGiants[0].temp && temperature >= absoluteMTableSuperGiants[absoluteMTableSuperGiants.length - 1].temp)? true : false,
+      m: magnitude,
+      M: infoSuper[0],
+      t: temperature,
+      d: infoSuper[1]
+    },
+  }
+  
+  Object.keys(data).forEach(function(key, index) {
+    Object.keys(data[key]).forEach(function(k, index) {
+      data[key][k] = Math.round((data[key][k] + Number.EPSILON) * 100) / 100
+    });
+  });
+
+  display(data)
+})
 
 function tempToBV(temp){
   return 0.92 * (
@@ -379,3 +537,50 @@ function tempToBV(temp){
   ) - 1.7;
 }
 
+function calcInfo(temperature, magnitude, table){
+  const Magnitude = tempToMagnitude(temperature, table)
+  const distance = magnitudeToDistance(magnitude, Magnitude)
+  return [Magnitude, distance]
+}
+
+const dwarfDisplay = document.getElementById('dwarfText');
+const mainDisplay = document.getElementById('mainText')
+const giantDisplay = document.getElementById('giantText')
+const superDisplay = document.getElementById('superText')
+
+const structure = (m, M, t, d, name) => `<h3>${name}</h3><ol>
+      <li>Apparent magnitude: ${m}</li>
+      <li>Absolute magnitude: ${M}</li>
+      <li>Effective temperature (kelvin): ${t}</li>
+      <li>Distance (parsec): ${d}</li>
+    </ol>`
+
+const fall = (m, t, name) => `<h3>${name}</h3><ol>
+      <li>Apparent magnitude: ${m}</li>
+      <li>Absolute magnitude: Unable to process</li>
+      <li>Effective temperature (kelvin): ${t}</li>
+      <li>Distance (parsec): Unable to process</li>
+    </ol>`   
+function display(data){
+  const { dwarf, main, giant, superG } = data
+  if(dwarf.w){
+    dwarfDisplay.innerHTML = structure(dwarf.m, dwarf.M, dwarf.t, dwarf.d, 'Dwarf star')
+  }else{
+    dwarfDisplay.innerHTML = fall(dwarf.m, dwarf.t, 'Dwarf star')
+  }
+  if(main.w){
+    mainDisplay.innerHTML = structure(main.m, main.M, main.t, main.d, 'Main sequence star')
+  }else{
+    mainDisplay.innerHTML = fall(main.m, main.t, 'Main sequence star')
+  }
+  if(giant.w){
+    giantDisplay.innerHTML = structure(giant.m, giant.M, giant.t, giant.d, 'Giant star')
+  }else{
+    giantDisplay.innerHTML = fall(giant.m, giant.t, 'Giant star')
+  }
+  if(superG.w){
+    superDisplay.innerHTML = structure(superG.m, superG.M, superG.t, superG.d, 'Super giant star')
+  }else{
+    superDisplay.innerHTML = fall(superG.m, superG.t, 'Super giant star')
+  }
+}

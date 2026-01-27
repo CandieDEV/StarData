@@ -32,10 +32,18 @@
         <input type="button" name="processIMG" id="processIMG" class="hidden" value="Räkna avstånd">
       </div>
     </form>
+    <div id="resultContainer">
+      <div id="dwarfText"></div>
+      <div id="mainText"></div>
+      <div id="giantText"></div>
+      <div id="superText"></div>
+    </div>
   </main>
   <%- include('templates/footer') %>
-  
-<script src="https://cdn.jsdelivr.net/npm/d3@7/+esm"></script>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<!-- <script src="https://d3js.org/d3-color.v0.3.min.js"></script> -->
+<script src="https://d3js.org/d3-interpolate.v0.2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/exifreader@4.12.0/dist/exif-reader.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
 <script src="/script/image_pre-processing.js"></script>

@@ -1,3 +1,7 @@
+main{
+  display: flex;
+  flex-direction: row;
+}
 form{
   display: flex; 
   position: relative;
@@ -5,6 +9,10 @@ form{
   flex-direction: column;
   gap: .5rem;
   padding: 1rem;
+}
+
+#resultContainer{
+  margin-top: 10vh;
 }
 
 #canvas-container{
