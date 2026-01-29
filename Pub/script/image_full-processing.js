@@ -482,13 +482,11 @@ processIMG.addEventListener('click', (e) => {
   console.log(`Dominant color: ${dominantHexColor}`);
 
   const magnitude = fluxTomagnitude(flux, window._imgMeta);
-  const temperature = colorToTemp(dominantHexColor) + 1000;
+  const temperature = colorToTemp(dominantHexColor);
   const infoDwarf = calcInfo(temperature, magnitude, absoluteMTableDwarf)
   const infoMain = calcInfo(temperature, magnitude, absoluteMTableMain)
   const infoGiant = calcInfo(temperature, magnitude, absoluteMTableGiant)
   const infoSuper = calcInfo(temperature, magnitude, absoluteMTableSuperGiants)
-
-  console.log(absoluteMTableDwarf[0].temp)
 
   const data = {
     dwarf: {
@@ -555,17 +553,17 @@ const superDisplay = document.getElementById('superText')
 const structure = (m, M, t, d, F, name) => `<h3>${name}</h3><ol>
       <li>Apparent magnitude: ${m}</li>
       <li>Absolute magnitude: ${M}</li>
-      <li>Flux (watt): ${F}</li>
+      <li>Relativ flux (arb. enhet): ${F}</li>
       <li>Effective temperature (kelvin): ${t}</li>
       <li>Distance (parsec): ${d}</li>
     </ol>`
 
 const fall = (m, t, F, name) => `<h3>${name}</h3><ol>
       <li>Apparent magnitude: ${m}</li>
-      <li>Absolute magnitude: Unable to process</li>
-      <li>Flux (watt): ${F}</li>
+      <li>Absolute magnitude: Temperatur utanför gränsvärde</li>
+      <li>Relativ flux (arb. enhet): ${F}</li>
       <li>Effective temperature (kelvin): ${t}</li>
-      <li>Distance (parsec): Unable to process</li>
+      <li>Distance (parsec): Temperatur utanför gränsvärde</li>
       </ol>`   
 function display(data){
   const { dwarf, main, giant, superG } = data
