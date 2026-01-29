@@ -109,19 +109,19 @@ function measureStarFlux() {
     const alpha = data[i + 3];
     if (alpha === 0) continue; // ignore background/removed pixels
     const r = data[i], g = data[i+1], b = data[i+2];
-    const brightness = 0.299*r + 0.587*g + 0.114*b;
-    flux += brightness;
+    const brightness = 0.299*r + 0.587*g + 0.114*b; //Estimates a percieved brightness of the star
+    flux += brightness; //Gets the sum of the percieved brightness, not a true flux as it is without unit
   }
-  return flux;
+  const constant = -0.07714520803; // Constant is calculated by measuring the flux of known stars and comparing the result to the expected value.
+  return flux * constant; // Multiplied by a constant to account for errors.
 }
 
 // Helper function to estimate the apparent magnitude using flux
 const fluxTomagnitude = (flux) => { 
-  const constant = -0.07714520803; //constant is calculated by measuring the flux of known stars and comparing the result to the expected value.
-  return -2.5 * Math.log10(flux) * constant; //uses the correlation between flux and apparent magnitude, multiplied by a constant to account for errors.
+  return -2.5 * Math.log10(flux); //uses the correlation between flux and apparent magnitude
 }
 
-// A table of known correlations between a stars temperature and their color
+// A table of known correlations between a stars temperature and their color. This table assumes main sequence stars
 const colorTable = [
   { temp: 2300, color: "#ff6813" },
   { temp: 2400, color: "#ff6e17" },
@@ -496,28 +496,32 @@ processIMG.addEventListener('click', (e) => {
       m: magnitude,
       M: infoDwarf[0],
       t: temperature,
-      d: infoDwarf[1]
+      d: infoDwarf[1],
+      F: flux
     },
     main:{
       w: (temperature <= absoluteMTableMain[0].temp && temperature >= absoluteMTableMain[absoluteMTableMain.length - 1].temp)? true : false,
       m: magnitude,
       M: infoMain[0],
       t: temperature,
-      d: infoMain[1]
+      d: infoMain[1],
+      F: flux
     },
     giant: {
       w: (temperature <= absoluteMTableGiant[0].temp && temperature >= absoluteMTableGiant[absoluteMTableGiant.length - 1].temp)? true : false,
       m: magnitude,
       M: infoGiant[0],
       t: temperature,
-      d: infoGiant[1]
+      d: infoGiant[1],
+      F: flux
     },
     superG: {
       w: (temperature <= absoluteMTableSuperGiants[0].temp && temperature >= absoluteMTableSuperGiants[absoluteMTableSuperGiants.length - 1].temp)? true : false,
       m: magnitude,
       M: infoSuper[0],
       t: temperature,
-      d: infoSuper[1]
+      d: infoSuper[1],
+      F: flux
     },
   }
   
@@ -548,39 +552,41 @@ const mainDisplay = document.getElementById('mainText')
 const giantDisplay = document.getElementById('giantText')
 const superDisplay = document.getElementById('superText')
 
-const structure = (m, M, t, d, name) => `<h3>${name}</h3><ol>
+const structure = (m, M, t, d, F, name) => `<h3>${name}</h3><ol>
       <li>Apparent magnitude: ${m}</li>
       <li>Absolute magnitude: ${M}</li>
+      <li>Flux (watt): ${F}</li>
       <li>Effective temperature (kelvin): ${t}</li>
       <li>Distance (parsec): ${d}</li>
     </ol>`
 
-const fall = (m, t, name) => `<h3>${name}</h3><ol>
+const fall = (m, t, F, name) => `<h3>${name}</h3><ol>
       <li>Apparent magnitude: ${m}</li>
       <li>Absolute magnitude: Unable to process</li>
+      <li>Flux (watt): ${F}</li>
       <li>Effective temperature (kelvin): ${t}</li>
       <li>Distance (parsec): Unable to process</li>
-    </ol>`   
+      </ol>`   
 function display(data){
   const { dwarf, main, giant, superG } = data
   if(dwarf.w){
-    dwarfDisplay.innerHTML = structure(dwarf.m, dwarf.M, dwarf.t, dwarf.d, 'Dwarf star')
+    dwarfDisplay.innerHTML = structure(dwarf.m, dwarf.M, dwarf.t, dwarf.d, dwarf.F, 'Dwarf star')
   }else{
-    dwarfDisplay.innerHTML = fall(dwarf.m, dwarf.t, 'Dwarf star')
+    dwarfDisplay.innerHTML = fall(dwarf.m, dwarf.t, dwarf.F, 'Dwarf star')
   }
   if(main.w){
-    mainDisplay.innerHTML = structure(main.m, main.M, main.t, main.d, 'Main sequence star')
+    mainDisplay.innerHTML = structure(main.m, main.M, main.t, main.d, main.F, 'Main sequence star')
   }else{
-    mainDisplay.innerHTML = fall(main.m, main.t, 'Main sequence star')
+    mainDisplay.innerHTML = fall(main.m, main.t, main.F, 'Main sequence star')
   }
   if(giant.w){
-    giantDisplay.innerHTML = structure(giant.m, giant.M, giant.t, giant.d, 'Giant star')
+    giantDisplay.innerHTML = structure(giant.m, giant.M, giant.t, giant.d, giant.F, 'Giant star')
   }else{
-    giantDisplay.innerHTML = fall(giant.m, giant.t, 'Giant star')
+    giantDisplay.innerHTML = fall(giant.m, giant.t, giant.F, 'Giant star')
   }
   if(superG.w){
-    superDisplay.innerHTML = structure(superG.m, superG.M, superG.t, superG.d, 'Super giant star')
+    superDisplay.innerHTML = structure(superG.m, superG.M, superG.t, superG.d, superG.F, 'Super giant star')
   }else{
-    superDisplay.innerHTML = fall(superG.m, superG.t, 'Super giant star')
+    superDisplay.innerHTML = fall(superG.m, superG.t, superG.F, 'Super giant star')
   }
 }
