@@ -111,14 +111,14 @@ function measureStarFlux() {
     const r = data[i], g = data[i+1], b = data[i+2];
     const brightness = 0.299*r + 0.587*g + 0.114*b; //Estimates a percieved brightness of the star
     flux += brightness; //Gets the sum of the percieved brightness, not a true flux as it is without unit
-  }
-  const constant = -0.07714520803; // Constant is calculated by measuring the flux of known stars and comparing the result to the expected value.
-  return flux * constant; // Multiplied by a constant to account for errors.
+  }  // Constant is calculated by measuring the flux of known stars and comparing the result to the expected value.
+  return Math.abs(flux); // Multiplied by a constant to account for errors.
 }
 
 // Helper function to estimate the apparent magnitude using flux
 const fluxTomagnitude = (flux) => { 
-  return -2.5 * Math.log10(flux); //uses the correlation between flux and apparent magnitude
+  const constant = -0.07714520803;
+  return -2.5 * Math.log10(flux) * constant; //uses the correlation between flux and apparent magnitude
 }
 
 // A table of known correlations between a stars temperature and their color. This table assumes main sequence stars
